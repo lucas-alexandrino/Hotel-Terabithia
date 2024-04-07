@@ -1,5 +1,5 @@
 var lista_hospedes = [];
-var quartos_ocupados = Array(20).fill(false);
+var quartos_ocupados = Array(20).fill(false); // Inicializa todos os quartos como livres.
 
 var nomeUsuario;
 
@@ -120,7 +120,9 @@ function reservar_quarto() {
             alert('Quarto Livre.');
             break;
         }
-    } while (true);
+    } while (true); 
+    
+    
 
     var confirmacao = prompt(`${nomeUsuario}, você confirma a hospedagem para ${nomeHospede} por ${qtdDias} dias para o quarto ${numQuarto} por R$${total.toFixed(2)}? (S/N)`);
 
