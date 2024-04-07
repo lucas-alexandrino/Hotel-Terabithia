@@ -1,5 +1,5 @@
 var lista_hospedes = [];
-var quartos_ocupados = Array(20).fill(false); // Inicializa todos os quartos como livres.
+var quartos_ocupados = Array(20).fill(false); 
 
 var nomeUsuario;
 
