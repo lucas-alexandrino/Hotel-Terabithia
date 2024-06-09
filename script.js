@@ -26,9 +26,13 @@ function menuOpcoes() {
 1. Cadastrar Hóspedes
 2. Pesquisar Hóspedes
 3. Reservar Quarto
-4. Sair`));
+4. Evento
+5. Combustivel
+6. Calcular Orcamento`));
 
-    switch (escolha) {
+    switch (escolha) { // evento
+        //verificarCombustivelMaisBarato
+        //calcularOrcamento
         case 1:
             sistema_cadastrar_hospedes();
             break;
@@ -42,6 +46,12 @@ function menuOpcoes() {
             evento();
             break;
         case 5:
+           combustivelBarato();
+            break;
+        case 6:
+            calcularOrcamento();
+            break;
+        case 7:
             alert(`Muito obrigado e até logo, ${nomeUsuario}.`);
             break;
         default:
@@ -72,9 +82,7 @@ function sistema_cadastrar_hospedes() {
     }
 }
 
-/// Hospede com <6 não paga, hospede com >60 paga meia
-/// cadastrar hospedes até digitar PARE
-// variavel para contar meia e gratuidade +=
+
 function cadastrar_hospedes() {
     if (lista_hospedes.length >= 15) {
         alert("Número máximo de hóspedes cadastrados.");
@@ -196,7 +204,6 @@ function verificarAuditorio(numConvidados) {
     }
 }
 
-// Função para verificar a disponibilidade do auditório
 function verificarDisponibilidade(dia, hora) {
     const diasUteis = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
     const fimDeSemana = ['sabado', 'domingo'];
@@ -210,7 +217,7 @@ function verificarDisponibilidade(dia, hora) {
     }
 }
 
-// Função para calcular o número de garçons necessários e o custo total
+
 function calcularGarcons(numConvidados, duracaoEvento) {
     const convidadosPorGarcom = 12;
     const custoPorHoraGarcom = 10.50;
@@ -227,7 +234,6 @@ function calcularGarcons(numConvidados, duracaoEvento) {
     };
 }
 
-// Função para calcular a quantidade de café, água e salgados e o custo total
 function calcularBuffet(numConvidados) {
     const cafePorConvidado = 0.2;
     const aguaPorConvidado = 0.5;
@@ -276,8 +282,7 @@ if (auditorio) {
         
         var resultadoBuffet = calcularBuffet(numConvidados);
         
-
-        // Exibir o relatório completo
+        // Relatório completo
         console.log(`Evento no Auditório ${auditorio.auditório}.`);
         console.log(`Nome da Empresa: ${nomeEmpresa}.`);
         console.log(`Data: ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}, ${horaEvento}H às ${horaEvento + duracaoEvento}H.`);
@@ -304,7 +309,7 @@ if (auditorio) {
 }
 
 }
-function verificarCombustivelMaisBarato() {
+function combustivelBarato() {
 
     function calcularCusto(valorCombustivel, litros) {
         return valorCombustivel * litros;
@@ -318,9 +323,8 @@ function verificarCombustivelMaisBarato() {
 
     var valorAlcoolStark = parseFloat(prompt("Qual o valor do álcool no posto Stark Petrol?"));
     var valorGasolinaStark = parseFloat(prompt("Qual o valor da gasolina no posto Stark Petrol?"));
-
-
     const litros = 42;
+
 
 
     var custoAlcoolWayne = calcularCusto(valorAlcoolWayne, litros);
@@ -355,5 +359,43 @@ function verificarCombustivelMaisBarato() {
 
 
     alert(`É mais barato abastecer com ${combustivelMaisBarato} no posto ${postoMaisBarato}.`);
+}
+
+function calcularOrcamento() {
+    let continuar = true;
+    let menorOrcamento = Number.MAX_VALUE;
+    let empresaMenorOrcamento = "";
+
+    while (continuar) {
+        let nomeEmpresa = prompt("Qual o nome da empresa?");
+        let valorPorAparelho = parseFloat(prompt("Qual o valor por aparelho?"));
+        let quantidadeAparelhos = parseInt(prompt("Qual a quantidade de aparelhos?"));
+        let porcentagemDesconto = parseFloat(prompt("Qual a porcentagem de desconto?"));
+        let quantidadeMinimaParaDesconto = parseInt(prompt("Qual o número mínimo de aparelhos para conseguir o desconto?"));
+
+
+
+        let valorTotal = valorPorAparelho * quantidadeAparelhos;
+
+
+        if (quantidadeAparelhos >= quantidadeMinimaParaDesconto) {
+            let desconto = valorTotal * (porcentagemDesconto / 100);
+            valorTotal -= desconto;
+        }
+
+        alert(`O serviço de ${nomeEmpresa} custará R$ ${valorTotal.toFixed(2)}`);
+
+        if (valorTotal < menorOrcamento) {
+            menorOrcamento = valorTotal;
+            empresaMenorOrcamento = nomeEmpresa;
+        }
+
+        let resposta = prompt("Deseja informar novos dados? (S/N)").toUpperCase();
+        if (resposta === 'N') {
+            continuar = false;
+        }
+    }
+
+    alert(`O orçamento de menor valor é o de ${empresaMenorOrcamento} por R$ ${menorOrcamento.toFixed(2)}`);
 }
 inicio();
