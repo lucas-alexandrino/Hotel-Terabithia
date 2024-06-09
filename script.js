@@ -39,6 +39,9 @@ function menuOpcoes() {
             reservar_quarto();
             break;
         case 4:
+            evento();
+            break;
+        case 5:
             alert(`Muito obrigado e até logo, ${nomeUsuario}.`);
             break;
         default:
@@ -79,8 +82,7 @@ function cadastrar_hospedes() {
         var nome_hospede = prompt('Por favor, informe o nome da(o) hóspede:');
         var idade_hospede = prompt('Por favor, informe a idade da(o) hóspede:');
         lista_hospedes.push(nome_hospede);
-        if (nome_hospede != "PARE") {
-            alert({ nomeUsuario } + ", o valor total das hospedagens é: R$250; 1 gratuidade(s); 1 meia(s)")
+        if (nome_hospede === "PARE") {
             cadastrar_hospedes();
         } if (idade_hospede <= 6) {
             diariagratis += 1; // Variavel de contagem de gratuidade
@@ -89,7 +91,7 @@ function cadastrar_hospedes() {
             meiadiaria += 1; // Variavel de contagem de meia diaria
             alert(nome_hospede + " paga meia")
         }
-        // lista_hospedes.push(nome_hospede);
+
         console.log(lista_hospedes); // O console é usado apenas para exibir ao desenvolvedor todo mundo que já está cadastrado.
         alert("Sucesso! Hóspede " + nome_hospede + " foi cadastrado(a) com sucesso!\n");
 
@@ -132,13 +134,13 @@ function reservar_quarto() {
 
     if (qtdHospedes > 1) {
         for (x = 0; x <= qtdHospedes; x++) {
-            var nomeHospede = prompt('Qual o nome do(s) hóspede?'); 
+            var nomeHospede = prompt('Qual o nome do(s) hóspede?');
             if (!lista_hospedes.includes(nomeHospede)) {
                 x--;
                 alert(nomeHospede + ' não está na lista de hóspedes.');
             }
         }
-        var total_hosp = (valorDiaria * qtdHospedes ) * qtdDias ;
+        var total_hosp = (valorDiaria * qtdHospedes) * qtdDias;
         alert(`O valor de ${qtdDias} dias de hospedagem pela familia é de R$${total_hosp.toFixed(2)}`); // Mostrar quantidade de gratuidades e meia
     } else {
         var total = valorDiaria * qtdDias;
@@ -146,7 +148,7 @@ function reservar_quarto() {
         alert(`O valor de ${qtdDias} dias de hospedagem é de R$${total.toFixed(2)}`);
     }
 
-    
+
 
     var numQuarto;
     do {
@@ -173,4 +175,185 @@ function reservar_quarto() {
     menuOpcoes();
 }
 
+function verificarAuditorio(numConvidados) {
+    const capacidadeLaranja = 150;
+    const capacidadeAdicionalLaranja = 70;
+    const capacidadeColorado = 350;
+
+    if (numConvidados > 350 || numConvidados < 0) {
+        console.log("Número de convidados inválido");
+        return null;
+    } else if (numConvidados <= capacidadeLaranja + capacidadeAdicionalLaranja) {
+        let cadeirasAdicionais = 0;
+        if (numConvidados > capacidadeLaranja) {
+            cadeirasAdicionais = numConvidados - capacidadeLaranja;
+        }
+        console.log(`Use o auditório Laranja (inclua mais ${cadeirasAdicionais} cadeiras)`);
+        return { auditório: "Laranja", cadeirasAdicionais: cadeirasAdicionais };
+    } else if (numConvidados <= capacidadeColorado) {
+        console.log("Use o auditório Colorado");
+        return { auditório: "Colorado", cadeirasAdicionais: 0 };
+    }
+}
+
+// Função para verificar a disponibilidade do auditório
+function verificarDisponibilidade(dia, hora) {
+    const diasUteis = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+    const fimDeSemana = ['sabado', 'domingo'];
+
+    if (diasUteis.includes(dia)) {
+        return (hora >= 7 && hora <= 23);
+    } else if (fimDeSemana.includes(dia)) {
+        return (hora >= 7 && hora <= 15);
+    } else {
+        return false;
+    }
+}
+
+// Função para calcular o número de garçons necessários e o custo total
+function calcularGarcons(numConvidados, duracaoEvento) {
+    const convidadosPorGarcom = 12;
+    const custoPorHoraGarcom = 10.50;
+
+    let garconsNecessarios = Math.ceil(numConvidados / convidadosPorGarcom);
+    let garconsExtras = Math.ceil(duracaoEvento / 2);
+    garconsNecessarios += garconsExtras;
+
+    let custoTotal = garconsNecessarios * duracaoEvento * custoPorHoraGarcom;
+
+    return {
+        garconsNecessarios: garconsNecessarios,
+        custoTotal: custoTotal.toFixed(2)
+    };
+}
+
+// Função para calcular a quantidade de café, água e salgados e o custo total
+function calcularBuffet(numConvidados) {
+    const cafePorConvidado = 0.2;
+    const aguaPorConvidado = 0.5;
+    const salgadosPorConvidado = 7;
+
+    const custoCafePorLitro = 0.80;
+    const custoAguaPorLitro = 0.40;
+    const custoSalgadosPorCento = 34.00;
+
+    let litrosCafe = numConvidados * cafePorConvidado;
+    let litrosAgua = numConvidados * aguaPorConvidado;
+    let quantidadeSalgados = numConvidados * salgadosPorConvidado;
+
+    let custoCafe = litrosCafe * custoCafePorLitro;
+    let custoAgua = litrosAgua * custoAguaPorLitro;
+    let custoSalgados = Math.ceil(quantidadeSalgados / 100) * custoSalgadosPorCento;
+
+    let custoTotalBuffet = (custoCafe + custoAgua + custoSalgados).toFixed(2);
+
+    return {
+        litrosCafe: litrosCafe.toFixed(1),
+        litrosAgua: litrosAgua.toFixed(1),
+        quantidadeSalgados: quantidadeSalgados,
+        custoTotalBuffet: custoTotalBuffet
+    };
+}
+
+function evento() {
+
+var numConvidados = parseInt(prompt("Qual o número de convidados para o seu evento?"), 10);
+
+var auditorio = verificarAuditorio(numConvidados);
+
+if (auditorio) {
+
+    var diaSemana = prompt("Qual o dia do seu evento?").toLowerCase();
+    var horaEvento = parseInt(prompt("Qual a hora do seu evento?"), 10);
+    
+
+    if (verificarDisponibilidade(diaSemana, horaEvento)) {
+        var nomeEmpresa = prompt("Qual o nome da empresa?");
+        
+        var duracaoEvento = parseInt(prompt("Qual a duração do evento em horas?"), 10);
+        
+        var resultadoGarcons = calcularGarcons(numConvidados, duracaoEvento);
+        
+        var resultadoBuffet = calcularBuffet(numConvidados);
+        
+
+        // Exibir o relatório completo
+        console.log(`Evento no Auditório ${auditorio.auditório}.`);
+        console.log(`Nome da Empresa: ${nomeEmpresa}.`);
+        console.log(`Data: ${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}, ${horaEvento}H às ${horaEvento + duracaoEvento}H.`);
+        console.log(`Duração do evento: ${duracaoEvento}H.`);
+        console.log(`Quantidade de garçons: ${resultadoGarcons.garconsNecessarios}.`);
+        console.log(`Quantidade de Convidados: ${numConvidados}.`);
+        console.log(`Custo dos garçons: R$${resultadoGarcons.custoTotal}.`);
+        console.log(`O evento precisará de ${resultadoBuffet.litrosCafe} litros de café, ${resultadoBuffet.litrosAgua} litros de água, ${resultadoBuffet.quantidadeSalgados} salgados.`);
+        console.log(`Custo do Buffet: R$${resultadoBuffet.custoTotalBuffet}.`);
+        
+        let custoTotalEvento = (parseFloat(resultadoGarcons.custoTotal) + parseFloat(resultadoBuffet.custoTotalBuffet)).toFixed(2);
+        console.log(`Valor total do Evento: R$${custoTotalEvento}.`);
+        
+
+        var confirmacao = prompt("Gostaria de efetuar a reserva? S/N").toUpperCase();
+        if (confirmacao === 'S') {
+            console.log(`${nomeEmpresa}, reserva efetuada com sucesso.`);
+        } else {
+            console.log("Reserva não efetuada.");
+        }
+    } else {
+        console.log("Auditório indisponível");
+    }
+}
+
+}
+function verificarCombustivelMaisBarato() {
+
+    function calcularCusto(valorCombustivel, litros) {
+        return valorCombustivel * litros;
+    }
+    function AlcoolMaisBarato(valorAlcool, valorGasolina) {
+        return valorAlcool <= (valorGasolina * 0.7);
+    }
+
+    var valorAlcoolWayne = parseFloat(prompt("Qual o valor do álcool no posto Wayne Oil?"));
+    var valorGasolinaWayne = parseFloat(prompt("Qual o valor da gasolina no posto Wayne Oil?"));
+
+    var valorAlcoolStark = parseFloat(prompt("Qual o valor do álcool no posto Stark Petrol?"));
+    var valorGasolinaStark = parseFloat(prompt("Qual o valor da gasolina no posto Stark Petrol?"));
+
+
+    const litros = 42;
+
+
+    var custoAlcoolWayne = calcularCusto(valorAlcoolWayne, litros);
+    var custoGasolinaWayne = calcularCusto(valorGasolinaWayne, litros);
+
+    var custoAlcoolStark = calcularCusto(valorAlcoolStark, litros);
+    var custoGasolinaStark = calcularCusto(valorGasolinaStark, litros);
+
+
+    var alcoolMaisBaratoWayne = AlcoolMaisBarato(valorAlcoolWayne, valorGasolinaWayne);
+    var alcoolMaisBaratoStark = AlcoolMaisBarato(valorAlcoolStark, valorGasolinaStark);
+
+    if (alcoolMaisBaratoWayne) {
+        menorCusto = custoAlcoolWayne;
+        combustivelMaisBarato = "álcool";
+        postoMaisBarato = "Wayne Oil";
+    } else {
+        menorCusto = custoGasolinaWayne;
+        combustivelMaisBarato = "gasolina";
+        postoMaisBarato = "Wayne Oil";
+    }
+
+    if (alcoolMaisBaratoStark && calcularCusto(valorAlcoolStark, litros) < menorCusto) {
+        menorCusto = calcularCusto(valorAlcoolStark, litros);
+        combustivelMaisBarato = "álcool";
+        postoMaisBarato = "Stark Petrol";
+    } else if (!alcoolMaisBaratoStark && calcularCusto(valorGasolinaStark, litros) < menorCusto) {
+        menorCusto = calcularCusto(valorGasolinaStark, litros);
+        combustivelMaisBarato = "gasolina";
+        postoMaisBarato = "Stark Petrol";
+    }
+
+
+    alert(`É mais barato abastecer com ${combustivelMaisBarato} no posto ${postoMaisBarato}.`);
+}
 inicio();
