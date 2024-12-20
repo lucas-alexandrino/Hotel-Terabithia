@@ -1,4 +1,4 @@
-## Hotel Terabithia
+# Hotel Terabithia
 
 Bem-vindo ao repositório do Hotel Terabithia, um projeto de sistema de gerenciamento de hotel desenvolvido com HTML, CSS e JavaScript puro. Este sistema abrange funcionalidades para cadastro e pesquisa de hóspedes, reserva de quartos e eventos, além do cálculo de orçamentos para eventos.
 
