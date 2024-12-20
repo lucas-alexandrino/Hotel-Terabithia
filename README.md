@@ -41,10 +41,10 @@ Bem-vindo ao repositório do Hotel Terabithia, um projeto de sistema de gerencia
 - JavaScript: Lógica de negócio e interatividade.
 
 ### Estrutura do Projeto
->
-> |-- index.html
-> |-- style.css
-> |-- script.js
+
+|-- index.html
+|-- style.css
+|-- script.js
 
 - index.html: Arquivo principal contendo a estrutura do site.
 
